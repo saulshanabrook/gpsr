@@ -1,12 +1,14 @@
 (ns kaggle-loan.divide-data
   (:require
    [clojure.java.shell :as shell]
-   [clojure.java.io :as io]))
+   [clojure.java.io :as io]
+   [taoensso.timbre :as timbre]))
 
+(timbre/refer-timbre) ; Provides useful Timbre aliases in this ns
 
 (defn make-partial-file
   [input-path output-path number-lines]
-  (shell/sh "/usr/local/bin/gshuf" input-path "-o" output-path "-n" (str number-lines)))
+  (p :shuf (shell/sh "/usr/local/bin/gshuf" input-path "-o" output-path "-n" (str number-lines))))
 
 (defn get-resource-full-path [resource-path]
   (.getFile (io/resource resource-path)))

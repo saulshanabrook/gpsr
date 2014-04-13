@@ -7,16 +7,19 @@
   (:require
    [kaggle-loan.error :as error]))
 
-(define-registered
-  aux_index_from_int
-  (fn [state]
-    (if (not (empty? (:integer state)))
-      (let [int-item (stack-ref :integer 0 state)
-            auxiliary-seq (stack-ref :auxiliary 0 state)
-            auxiliary-item (nth auxiliary-seq (mod int-item (count auxiliary-seq)))
-            result-state (pop-item :integer state)]
-        (push-item auxiliary-item :exec result-state))
-      state)))
+(try
+  (define-registered
+    aux_index_from_int
+    (fn [state]
+      (if (not (empty? (:integer state)))
+        (let [int-item (stack-ref :integer 0 state)
+              auxiliary-seq (stack-ref :auxiliary 0 state)
+              auxiliary-item (nth auxiliary-seq (mod int-item (count auxiliary-seq)))
+              result-state (pop-item :integer state)]
+          (push-item auxiliary-item :exec result-state))
+        state)))
+  (catch Exception e (str "Already defined index: " (.getMessage e))))
+
 
 (defn argmap [fitness-casses input-count]
   {:error-function (error/error-function fitness-casses)
